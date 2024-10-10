@@ -22,15 +22,16 @@ export type DatabaseOptions = {
     charset?: string
 } | MySQLOptions;
 
-function pickEnv(env: string, prefix?: string, env2?: string) {
+function pickEnv(env: string, prefix?: string, env2?: string): string | undefined {
     env = env.toUpperCase();
     prefix = prefix?.toUpperCase();
     if (prefix && process.env[prefix+"_"+env]) {
         return process.env[prefix+"_"+env]
     }
-    if (env2) return pickEnv(env2, prefix);
-    return process.env['APP_DATABASE_'+env] 
-            || process.env['DATABASE_'+env];
+    let resp = process.env['APP_DATABASE_'+env] 
+            || process.env['DATABASE_'+env]
+    if (!resp && env2) resp = pickEnv(env2, prefix);
+    return resp;
 }
 function rPickEnv(env: string, prefix?: string, env2?: string) {
     env = env.toUpperCase();

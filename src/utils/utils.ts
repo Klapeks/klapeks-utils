@@ -15,8 +15,10 @@ export function assertNever(never: never, error?: any): never {
     if (typeof error != 'object') error = new Error(error);
     throw error;
 }
-export default {
+
+const utils = {
     delay: sleep, sleep, assertNever,
+    
     replaceAll(str: string, from: string, to: string): string {
         while(str.includes(from)) {
             str = str.replace(from, to);
@@ -29,6 +31,7 @@ export default {
         return str.substring(0, lastIndex) + to +
                 str.substring(lastIndex + from.length);
     },
+    
     /** @return from 0 to max-1 */
     random(max: number) {
         return (Math.random() * max) | 0;
@@ -47,4 +50,30 @@ export default {
         }
         return str;
     },
+
+    copyFiltered<T>(object: Partial<T>, keys: (keyof T)[]): Partial<T> {
+        const obj: Partial<T> = {};
+        for (let key of keys) {
+            if (object[key] === undefined) continue;
+            if (typeof object[key] == 'undefined') continue;
+            obj[key] = object[key];
+        }
+        return obj;
+    },
+    removeUndefineds(object: any, deep = true): any {
+        if (typeof object != 'object') return object;
+        for (let key of Object.keys(object)) {
+            if (object[key] === undefined) delete object[key];
+            else if (typeof object[key] === 'undefined') {
+                delete object[key];
+            }
+            else if (deep && typeof object[key] == 'object') {
+                object[key] = utils.removeUndefineds(object[key]);
+            }
+        }
+        return object;
+    }
 } as const;
+
+
+export default utils;

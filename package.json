@@ -1,0 +1,24 @@
+{
+    "name": "@klapeks/utils",
+    "description": "klapeks utils",
+    "version": "0.0.1",
+    "type": "commonjs",
+    "author": "Klapeks",
+    "license": "ISC",
+    "scripts": {
+        "build": "tsc"
+    },
+    "keywords": [
+        "klapeks",
+        "utils"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Klapeks/klapeks-utils.git"
+    },
+    "devDependencies": {
+        "@types/node": "^18.11.18",
+        "typescript": "^4.7.4"
+    },
+    "dependencies": {}
+}

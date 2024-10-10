@@ -1,3 +1,6 @@
+import { catchRouterError, errorParser, shortErrorParser } from "./http/error.parser";
+import { HttpException, HttpStatus, NotAuthException } from "./http/exceptions";
+import HttpResponse from "./http/http.response";
 import bits, { bufferBits } from "./utils/bits";
 import { dataSourceOptions, DatabaseOptions } from './utils/dbpath.parser';
 import logger, { Logger } from "./utils/logs";
@@ -14,7 +17,15 @@ export {
     logger,
     Logger,
     terminalColors,
-    
+
     dataSourceOptions,
     DatabaseOptions,
+
+    HttpStatus,
+    HttpException,
+    NotAuthException,
+    HttpResponse,
+    errorParser,
+    catchRouterError,
+    shortErrorParser
 }

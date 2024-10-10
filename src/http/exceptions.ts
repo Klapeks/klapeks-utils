@@ -11,7 +11,7 @@ export class HttpException<T = any> extends Error {
 }
 export class NotAuthException extends HttpException {
     constructor() {
-        super("NO_AUTH", HttpStatus.UNAUTHORIZED)
+        super("No auth", HttpStatus.UNAUTHORIZED)
     }
 }
 

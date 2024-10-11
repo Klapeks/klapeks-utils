@@ -28,7 +28,8 @@ function pickEnv(env: string, prefix?: string, env2?: string): string | undefine
     if (prefix && process.env[prefix+"_"+env]) {
         return process.env[prefix+"_"+env]
     }
-    let resp = process.env['APP_DATABASE_'+env] 
+    let resp = process.env['REWRITE_DATABASE_'+env] 
+            || process.env['APP_DATABASE_'+env] 
             || process.env['DATABASE_'+env]
     if (!resp && env2) resp = pickEnv(env2, prefix);
     return resp;

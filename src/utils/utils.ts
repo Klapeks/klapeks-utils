@@ -1,8 +1,17 @@
 import logger from './logs';
 
-export type DeepPartial<T> = T extends object ? {
+// export type DeepPartial<T> = T extends object ? {
+//     [P in keyof T]?: DeepPartial<T[P]>;
+// } : T;
+export type DeepPartial<T> =
+    T extends (infer R)[] ? DeepPartialArray<R> :
+    (T extends Function ? T :
+    (T extends object ? DeepPartialObject<T> :
+    T));
+interface DeepPartialArray<T> extends Array<DeepPartial<T>> {}
+type DeepPartialObject<T> = {
     [P in keyof T]?: DeepPartial<T[P]>;
-} : T;
+};
 
 function sleep(ms: number) {
     return new Promise<void>(resolve => {

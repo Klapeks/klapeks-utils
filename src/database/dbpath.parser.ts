@@ -1,5 +1,5 @@
-import logger from "./logs";
-import { assertNever } from "./utils";
+import logger from "../utils/logs";
+import { assertNever } from "../utils/utils";
 
 interface AuthDB {
     host: string,

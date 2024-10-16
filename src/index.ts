@@ -1,4 +1,4 @@
-import { catchRouterError, errorParser, shortErrorParser } from "./http/error.parser";
+import { catchRouterError, errorParser, ErrorResponse, shortErrorParser } from "./http/error.parser";
 import { HttpException, HttpStatus, NotAuthException } from "./http/exceptions";
 import HttpResponse from "./http/http.response";
 import bits, { bufferBits } from "./utils/bits";
@@ -28,6 +28,7 @@ export {
     NotAuthException,
     HttpResponse,
     errorParser,
+    ErrorResponse,
     catchRouterError,
     shortErrorParser
 }

@@ -1,17 +1,35 @@
+import { ErrorResponse } from "./error.parser";
 
-export class HttpException<T = any> extends Error {
+export class HttpException extends Error {
+    readonly errorCode?: string;
     readonly status: number;
-    readonly response: T;
-    constructor(response: T, status: number = HttpStatus.BAD_REQUEST) {
-        super(response as any);
-        this.response = response;
+    readonly response: string;
+    
+    constructor(message: string, status?: number);
+    constructor(errorCode: string, status: number, responseMessage: string | any);
+    constructor(error: string, status: number = HttpStatus.BAD_REQUEST, response?: string | any) {
+        super('HttpError: ' + error);
         this.status = status;
+        if (response) {
+            this.response = response;
+            this.errorCode = error;
+        } else {
+            this.response = error;
+        }
         Object.setPrototypeOf(this, HttpException.prototype);
+    }
+
+    asResponse(): ErrorResponse {
+        return {
+            status: this.status,
+            error: this.response,
+            errorCode: this.errorCode
+        }
     }
 }
 export class NotAuthException extends HttpException {
     constructor() {
-        super("No auth", HttpStatus.UNAUTHORIZED)
+        super("NO_AUTH", HttpStatus.UNAUTHORIZED, "No auth")
     }
 }
 

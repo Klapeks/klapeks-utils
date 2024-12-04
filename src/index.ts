@@ -7,11 +7,13 @@ import logger, { Logger } from "./utils/logs";
 import terminalColors from './utils/terminal.colors';
 import utils, { assertNever, DeepPartial } from "./utils/utils";
 import { createDatabaseIfNotExists } from "./database/db.creator";
+import Queue from "./utils/queue";
 
 export {
     bits,
     bufferBits,
     utils,
+    Queue,
     assertNever,
     DeepPartial,
 

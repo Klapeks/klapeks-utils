@@ -1,26 +1,7 @@
 import logger from "../utils/logs";
 import { assertNever } from "../utils/utils";
+import { DatabaseOptions } from "./db.types";
 
-interface AuthDB {
-    host: string,
-    port: number,
-    username: string,
-    password?: string,
-    database: string,
-    charset?: any
-}
-
-type MySQLOptions = {
-    type: "mysql",
-    logging: boolean
-} & AuthDB;
-
-export type  DatabaseOptions = {
-    type: "sqlite",
-    database: string,
-    logging: boolean,
-    charset?: string
-} | MySQLOptions;
 
 function pickEnv(env: string, prefix?: string, env2?: string): string | undefined {
     env = env.toUpperCase();
@@ -56,19 +37,25 @@ export function dataSourceOptions(): DatabaseOptions {
     const logging = pickEnv('log_sql') == 'true'
                  || pickEnv('sql_log') == 'true';
                  
-    if (type == 'sqlite') return {
-        type: 'sqlite', logging,
-        database: rPickEnv('path', 'sqlite'),
-        charset: pickEnv('charset', 'sqlite'),
+    if (type == 'sqlite') {
+        return {
+            type: 'sqlite', 
+            logging: logging,
+            database: rPickEnv('path', 'sqlite'),
+            charset: pickEnv('charset', 'sqlite'),
+        }
     }
-    if (type == 'mysql') return {
-        type, logging,
-        host: rPickEnv("host", "mysql", 'ip'),
-        port: Number(rPickEnv('port', "mysql")),
-        database: rPickEnv('name', "mysql"),
-        username: rPickEnv('login', "mysql", 'user'),
-        password: pickEnv('password', "mysql"),
-        charset: pickEnv('charset', 'mysql'),
+    if (type == 'mysql' || type == 'postgres') {
+        return {
+            type, 
+            logging,
+            host: rPickEnv("host", type, 'ip'),
+            port: Number(rPickEnv('port', type)),
+            database: rPickEnv('name', type),
+            username: rPickEnv('login', type, 'user'),
+            password: pickEnv('password', type),
+            charset: pickEnv('charset', type),
+        }
     }
     assertNever(type, 'Invalid database type: ' + type);
 }

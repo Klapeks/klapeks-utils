@@ -2,12 +2,14 @@ import { catchRouterError, errorParser, ErrorResponse, shortErrorParser } from "
 import { HttpException, HttpStatus, NotAuthException } from "./http/exceptions";
 import HttpResponse from "./http/http.response";
 import bits, { bufferBits } from "./utils/bits";
-import { dataSourceOptions, DatabaseOptions, getDatabaseType } from './database/dbpath.parser';
+import { dataSourceOptions, getDatabaseType } from './database/dbpath.parser';
 import logger, { Logger } from "./utils/logs";
 import terminalColors from './utils/terminal.colors';
 import utils, { assertNever, DeepPartial } from "./utils/utils";
 import { createDatabaseIfNotExists } from "./database/db.creator";
 import Queue from "./utils/queue";
+import { DatabaseOptions } from "./database/db.types";
+import { getDatabaseColumnTypes } from "./database/db.column.types";
 
 export {
     bits,
@@ -25,6 +27,7 @@ export {
     dataSourceOptions,
     createDatabaseIfNotExists,
     DatabaseOptions,
+    getDatabaseColumnTypes,
 
     HttpStatus,
     HttpException,

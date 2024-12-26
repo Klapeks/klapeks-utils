@@ -15,7 +15,7 @@ type MySQLOptions = {
     logging: boolean
 } & AuthDB;
 
-export type DatabaseOptions = {
+export type  DatabaseOptions = {
     type: "sqlite",
     database: string,
     logging: boolean,
@@ -44,8 +44,15 @@ function rPickEnv(env: string, prefix?: string, env2?: string) {
     throw new Error(r);
 }
 
+let _database_type: DatabaseOptions['type'] | undefined;
+export function getDatabaseType(): DatabaseOptions['type'] {
+    if (_database_type) return _database_type;
+    _database_type = pickEnv('type') as DatabaseOptions['type'];
+    return _database_type;
+}
+
 export function dataSourceOptions(): DatabaseOptions {
-    const type = pickEnv('type') as DatabaseOptions['type'];
+    const type = getDatabaseType();
     const logging = pickEnv('log_sql') == 'true'
                  || pickEnv('sql_log') == 'true';
                  

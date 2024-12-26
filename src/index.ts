@@ -2,7 +2,7 @@ import { catchRouterError, errorParser, ErrorResponse, shortErrorParser } from "
 import { HttpException, HttpStatus, NotAuthException } from "./http/exceptions";
 import HttpResponse from "./http/http.response";
 import bits, { bufferBits } from "./utils/bits";
-import { dataSourceOptions, DatabaseOptions } from './database/dbpath.parser';
+import { dataSourceOptions, DatabaseOptions, getDatabaseType } from './database/dbpath.parser';
 import logger, { Logger } from "./utils/logs";
 import terminalColors from './utils/terminal.colors';
 import utils, { assertNever, DeepPartial } from "./utils/utils";
@@ -21,6 +21,7 @@ export {
     Logger,
     terminalColors,
 
+    getDatabaseType,
     dataSourceOptions,
     createDatabaseIfNotExists,
     DatabaseOptions,

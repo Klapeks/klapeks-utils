@@ -10,6 +10,8 @@ import { createDatabaseIfNotExists } from "./database/db.creator";
 import Queue from "./utils/queue";
 import { DatabaseOptions } from "./database/db.types";
 import { getDatabaseColumnTypes } from "./database/db.column.types";
+import Intervals, { clearAsyncInterval, clearAsyncIntervals, setAsyncInterval } from "./utils/intervals";
+import { handleUncaughtException } from "./utils/uncaught.exception";
 
 export {
     bits,
@@ -36,5 +38,11 @@ export {
     errorParser,
     ErrorResponse,
     catchRouterError,
-    shortErrorParser
+    shortErrorParser,
+
+    Intervals,
+    setAsyncInterval,
+    clearAsyncIntervals,
+    clearAsyncInterval,
+    handleUncaughtException
 }

@@ -12,6 +12,11 @@ import { DatabaseOptions } from "./database/db.types";
 import { getDatabaseColumnTypes } from "./database/db.column.types";
 import Intervals, { clearAsyncInterval, clearAsyncIntervals, setAsyncInterval } from "./utils/intervals";
 import { handleUncaughtException } from "./utils/uncaught.exception";
+import { joinManyToOne, joinOneToMany, mapOf } from "./database/join.utils";
+import { reactive } from "./utils/types/reactive";
+
+export * from './utils/types/flat.types';
+export * from './database/join.utils';
 
 export {
     bits,
@@ -20,6 +25,7 @@ export {
     Queue,
     assertNever,
     DeepPartial,
+    reactive,
 
     logger,
     Logger,

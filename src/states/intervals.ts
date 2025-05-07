@@ -1,4 +1,4 @@
-import logs from "./logs";
+import logs from "../utils/logs";
 
 interface AsyncInterval {
     timer: number;

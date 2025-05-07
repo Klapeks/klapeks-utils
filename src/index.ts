@@ -5,15 +5,16 @@ import bits, { bufferBits } from "./utils/bits";
 import { dataSourceOptions, getDatabaseType } from './database/dbpath.parser';
 import logger, { Logger } from "./utils/logs";
 import terminalColors from './utils/terminal.colors';
-import utils, { assertNever, DeepPartial } from "./utils/utils";
+import utils, { assertNever } from "./utils/utils";
 import { createDatabaseIfNotExists } from "./database/db.creator";
-import Queue from "./utils/queue";
+import Queue from "./states/queue";
 import { DatabaseOptions } from "./database/db.types";
 import { getDatabaseColumnTypes } from "./database/db.column.types";
-import Intervals, { clearAsyncInterval, clearAsyncIntervals, setAsyncInterval } from "./utils/intervals";
+import Intervals, { clearAsyncInterval, clearAsyncIntervals, setAsyncInterval } from "./states/intervals";
 import { handleUncaughtException } from "./utils/uncaught.exception";
 import { joinManyToOne, joinOneToMany, mapOf } from "./database/join.utils";
-import { reactive } from "./utils/types/reactive";
+import { reactive } from "./states/reactive";
+import { DeepPartial, DeepReadonly } from "./utils/types/deep.types";
 
 export * from './utils/types/flat.types';
 export * from './database/join.utils';
@@ -25,6 +26,7 @@ export {
     Queue,
     assertNever,
     DeepPartial,
+    DeepReadonly,
     reactive,
 
     logger,

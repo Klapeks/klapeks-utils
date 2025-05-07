@@ -1,4 +1,4 @@
-import logger from "./logs";
+import logger from "../utils/logs";
 
 
 export default class Queue {

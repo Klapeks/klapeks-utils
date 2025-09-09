@@ -1,7 +1,7 @@
 import fs from 'fs';
 import mPath from 'path';
 
-class HttpResponse {
+export class HttpResponse {
 
     readonly response: any;
     public status: number;
@@ -49,6 +49,3 @@ class HttpResponse {
         return new HttpResponse(path);
     } 
 }
-
-
-export default HttpResponse;

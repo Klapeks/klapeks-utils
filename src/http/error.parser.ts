@@ -1,4 +1,4 @@
-import logger from "../utils/logs";
+import { logger } from "../utils/logs";
 import { HttpException, HttpStatus } from "./exceptions";
 
 export interface ErrorResponse {

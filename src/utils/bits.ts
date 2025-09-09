@@ -27,7 +27,7 @@ const bits = {
     }
 }
 
-export const bufferBits = {
+const bufferBits = {
     has(buf256: number[], position: number) {
         position -= 1;
         return bits.has(
@@ -78,4 +78,7 @@ function testBits() {
 }
 testBits();
 
-export default bits;
+export { 
+    bits,
+    bufferBits
+}

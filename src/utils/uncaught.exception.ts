@@ -1,5 +1,5 @@
 import { shortErrorParser } from "../http/error.parser";
-import logger from "./logs";
+import { logger } from "./logs";
 
 
 let isUncaughtExceptionHandlerEnabled = false;

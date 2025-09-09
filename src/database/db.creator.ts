@@ -1,4 +1,4 @@
-import logger from "../utils/logs";
+import { logger } from "../utils/logs";
 import fs from 'fs';
 import mPath from 'path';
 

@@ -1,4 +1,4 @@
-import logger from "../utils/logs";
+import { logger } from "../utils/logs";
 import { assertNever } from "../utils/utils";
 import { DatabaseOptions } from "./db.types";
 

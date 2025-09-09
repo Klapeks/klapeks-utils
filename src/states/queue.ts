@@ -1,7 +1,7 @@
-import logger from "../utils/logs";
+import { logger } from "../utils/logs";
 
 
-export default class Queue {
+export class Queue {
     
     private queue: (() => any)[] = [];
     constructor() {}

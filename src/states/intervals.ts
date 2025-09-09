@@ -1,12 +1,12 @@
-import logs from "../utils/logs";
+import { logger } from "../utils";
 
-interface AsyncInterval {
+export interface IAsyncInterval {
     timer: number;
     inverval: number;
     callback: () => Promise<any>;
 }
 
-let asyncIntervals = [] as AsyncInterval[];
+let asyncIntervals = [] as IAsyncInterval[];
 const INTERVAL_MS = 50;
 
 setInterval(() => {
@@ -23,17 +23,17 @@ setInterval(() => {
                 interval.timer = interval.inverval;
             });
         } catch (err) {
-            logs.error('errow while intervaling', err);
+            logger.error('errow while intervaling', err);
         }
     }
 }, INTERVAL_MS);
 
 
-export function clearAsyncIntervals(intervals: AsyncInterval[]) {
+export function clearAsyncIntervals(intervals: IAsyncInterval[]) {
     if (!intervals?.length) return;
     asyncIntervals = asyncIntervals.filter(i => !intervals.includes(i));
 }
-export function clearAsyncInterval(interval: AsyncInterval | (() => Promise<any>)) {
+export function clearAsyncInterval(interval: IAsyncInterval | (() => Promise<any>)) {
     if ('apply' in interval) {
         asyncIntervals = asyncIntervals.filter(i => i.callback != interval);
         return;
@@ -41,15 +41,15 @@ export function clearAsyncInterval(interval: AsyncInterval | (() => Promise<any>
     asyncIntervals = asyncIntervals.filter(i => i != interval);
 }
 export function setAsyncInterval(callback: () => Promise<any>, ms: number) {
-    const interval: AsyncInterval = { callback, inverval: ms, timer: ms };
+    const interval: IAsyncInterval = { callback, inverval: ms, timer: ms };
     asyncIntervals.push(interval);
     return interval;
 }
 
-export default class Intervals {
+export class Intervals {
 
     private _intervals = [] as any[];
-    private _asyncIntervals = [] as AsyncInterval[];
+    private _asyncIntervals = [] as IAsyncInterval[];
     private _timeouts = undefined as Set<any> | undefined;
 
     start(callback: () => any, ms: number) {

@@ -1,4 +1,4 @@
-import logger from './logs';
+import { logger } from './logs';
 
 
 function sleep(ms: number) {
@@ -13,7 +13,7 @@ export function assertNever(never: never, error?: any): never {
     throw error;
 }
 
-const utils = {
+export const utils = {
     delay: sleep, sleep, assertNever,
     
     replaceAll(str: string, from: string, to: string): string {
@@ -71,6 +71,3 @@ const utils = {
         return object;
     }
 } as const;
-
-
-export default utils;

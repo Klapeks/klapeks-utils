@@ -38,47 +38,45 @@ export class Logger {
     }
 }
 
-const globalLogger = new Logger(null as any);
+const _globalLogger = new Logger(null as any);
 
 console.log('-----| App starting...', colors.cyan 
     + new Date().toLocaleString(), colors.reset + '|-----');
 
-const logger = {
+export const logger = {
     create(name: string) {
         return new Logger(name);
     },
-    log: globalLogger.log,
-    debug: globalLogger.debug,
-    warn: globalLogger.warn,
-    error: globalLogger.error,
-};
+    log: _globalLogger.log,
+    debug: _globalLogger.debug,
+    warn: _globalLogger.warn,
+    error: _globalLogger.error,
 
-(() => {
-    const _date = new Date();
-    _date.setDate(_date.getDate()+1);
-    _date.setSeconds(30);
-    _date.setMinutes(0);
-    _date.setHours(0);
-    function newDateStated(isNewDate = true) {
-        const date = new Date();
-        let dateStr = colors.reset + (isNewDate ? "New day started" : "This day") + ": ";
-        dateStr += colors.green + date.getFullYear() + "-" 
-            + (date.getMonth() + 1).toString().padStart(2, '0')
-            + "-" + (date.getDate()).toString().padStart(2, '0');
-        dateStr += colors.reset + " | " + colors.yellow + date
-                .toLocaleDateString('uk-UA', { dateStyle: "long" });
+    startEveryDayLog() {
+        const _date = new Date();
+        _date.setDate(_date.getDate()+1);
+        _date.setSeconds(30);
+        _date.setMinutes(0);
+        _date.setHours(0);
 
-        logger.log(dateStr);
-        globalLogger.inErr(dateStr);
+        function newDateStated(isNewDate = true) {
+            const date = new Date();
+            let dateStr = colors.reset + (isNewDate ? "New day started" : "This day") + ": ";
+            dateStr += colors.green + date.getFullYear() + "-" 
+                + (date.getMonth() + 1).toString().padStart(2, '0')
+                + "-" + (date.getDate()).toString().padStart(2, '0');
+            dateStr += colors.reset + " | " + colors.yellow + date
+                    .toLocaleDateString('uk-UA', { dateStyle: "long" });
+
+            logger.log(dateStr);
+            _globalLogger.inErr(dateStr);
+        }
+        newDateStated(false);
+        setTimeout(() => {
+            newDateStated();
+            setInterval(() => {
+                newDateStated()
+            }, 24 * 60 * 60 * 1000);
+        }, _date.getTime() - Date.now());
     }
-    newDateStated(false);
-    setTimeout(() => {
-        newDateStated();
-        setInterval(() => {
-            newDateStated()
-        }, 24 * 60 * 60 * 1000);
-    }, _date.getTime() - Date.now());
-})();
-
-
-export default logger;
+};

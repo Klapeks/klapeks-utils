@@ -1,4 +1,4 @@
-import { colors } from "./terminal.colors";
+import { terminalColors as colors } from "./terminal.colors";
 
 export class Logger {
     readonly name: string;

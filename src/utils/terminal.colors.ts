@@ -1,4 +1,4 @@
-export const colors = {
+export const terminalColors = {
     reset: "\x1b[0m",
     _bright:  "\x1b[1m",
     _dim:  "\x1b[2m",

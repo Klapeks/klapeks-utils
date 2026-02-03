@@ -75,5 +75,6 @@ export function catchRouterError(e: any, res: any) {
 
 export function shortErrorParser(err: any) {
     if (!err) return 'undefined error';
-    return errorParser(err, true)?.error || err.message || err;
+    const parsed = errorParser(err, true) as any;
+    return parsed?.error || parsed?.message || err.message || err;
 }

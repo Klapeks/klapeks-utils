@@ -1,35 +1,50 @@
 import { ErrorResponse } from "./error.parser";
 
 export class HttpException extends Error {
-    readonly errorCode?: string;
-    readonly status: number;
-    readonly response: string;
+
+    readonly errorResponse: ErrorResponse;
     
+    constructor(errorResponse: ErrorResponse);
     constructor(message: string, status?: number);
     constructor(errorCode: string, status: number, responseMessage: string | any);
-    constructor(error: string, status: number = HttpStatus.BAD_REQUEST, response?: string | any) {
-        super('HttpError: ' + error);
-        this.status = status;
-        if (response) {
-            this.response = response;
-            this.errorCode = error;
+    constructor(
+        error: string | ErrorResponse, 
+        status: number = HttpStatus.BAD_REQUEST, 
+        response?: string | any
+    ) {
+        super('HttpError: ' + (typeof error === 'object' ? error.error : error));
+        if (typeof error === 'object') {
+            this.errorResponse = error;
         } else {
-            this.response = error;
+            this.errorResponse = {
+                status: status,
+                error: response || error,
+                errorCode: response ? error : undefined
+            };
         }
         Object.setPrototypeOf(this, HttpException.prototype);
     }
 
+    get errorCode(): string | undefined {
+        return this.errorResponse.errorCode;
+    }
+    get status(): number {
+        return this.errorResponse.status;
+    }
+    get response(): string {
+        return this.errorResponse.error;
+    }
     asResponse(): ErrorResponse {
-        return {
-            status: this.status,
-            error: this.response,
-            errorCode: this.errorCode
-        }
+        return this.errorResponse;
     }
 }
 export class NotAuthException extends HttpException {
     constructor() {
-        super("NO_AUTH", HttpStatus.UNAUTHORIZED, "No auth")
+        super({
+            error: "No auth",
+            status: HttpStatus.UNAUTHORIZED,
+            errorCode: "NO_AUTH",
+        })
     }
 }
 

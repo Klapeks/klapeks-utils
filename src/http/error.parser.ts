@@ -20,6 +20,9 @@ export function errorParser(e: any, raw = false): ErrorResponse {
             error: "AxiosError: " + e?.message || e 
         };
     }
+    if (typeof e === 'object') {
+        if (e.status && e.error && e.errorCode) return e;
+    }
 
     // --- array parse: [err, status, errCode] ---
     let code = 0;

@@ -1,14 +1,14 @@
 import { ErrorResponse } from "./error.parser";
 
-export class HttpException extends Error {
+export class HttpException<T extends ErrorResponse = ErrorResponse> extends Error {
 
     readonly errorResponse: ErrorResponse;
     
-    constructor(errorResponse: ErrorResponse);
+    constructor(errorResponse: T);
     constructor(message: string, status?: number);
     constructor(errorCode: string, status: number, responseMessage: string | any);
     constructor(
-        error: string | ErrorResponse, 
+        error: string | ErrorResponse | T, 
         status: number = HttpStatus.BAD_REQUEST, 
         response?: string | any
     ) {

@@ -1,6 +1,6 @@
 
 export interface AuthDatabases {
-    type: "mysql" | "postgres"
+    type: "mysql" | "postgres" | "mssql",
 
     host: string,
     port: number,

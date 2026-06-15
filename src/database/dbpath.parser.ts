@@ -45,7 +45,7 @@ export function dataSourceOptions(): DatabaseOptions {
             charset: pickEnv('charset', 'sqlite'),
         }
     }
-    if (type == 'mysql' || type == 'postgres') {
+    if (type == 'mysql' || type == 'postgres' || type == 'mssql') {
         return {
             type, 
             logging,

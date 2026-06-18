@@ -10,7 +10,10 @@ export interface AuthDatabases {
 
     database: string,
     charset?: any
-    logging: boolean
+    logging: boolean,
+
+    options?: any,
+    extra?: any,
 }
 
 export type DatabaseOptions = {

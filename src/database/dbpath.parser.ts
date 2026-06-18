@@ -55,6 +55,14 @@ export function dataSourceOptions(): DatabaseOptions {
             username: rPickEnv('login', type, 'user'),
             password: pickEnv('password', type),
             charset: pickEnv('charset', type),
+            options: type === 'mssql' ? {
+                trustServerCertificate: true,
+                encrypt: true,
+            } : undefined,
+            extra: type === 'mssql' ? {
+                trustServerCertificate: true,
+                encrypt: true,
+            } : undefined,
         }
     }
     assertNever(type, 'Invalid database type: ' + type);

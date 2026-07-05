@@ -46,6 +46,13 @@ export function dataSourceOptions(): DatabaseOptions {
         }
     }
     if (type == 'mysql' || type == 'postgres' || type == 'mssql') {
+        const extraOptions = type === 'mssql' ? {
+            useUTC: rPickEnv('options_use_utc') == 'true',
+            trustServerCertificate: rPickEnv(
+                'options_trust_server_certificate') == 'false' 
+                ? false : true,
+            encrypt: rPickEnv('options_encrypt') == 'false' ? false : true,
+        } : undefined;
         return {
             type, 
             logging,
@@ -55,14 +62,8 @@ export function dataSourceOptions(): DatabaseOptions {
             username: rPickEnv('login', type, 'user'),
             password: pickEnv('password', type),
             charset: pickEnv('charset', type),
-            options: type === 'mssql' ? {
-                trustServerCertificate: true,
-                encrypt: true,
-            } : undefined,
-            extra: type === 'mssql' ? {
-                trustServerCertificate: true,
-                encrypt: true,
-            } : undefined,
+            options: extraOptions,
+            extra: extraOptions,
         }
     }
     assertNever(type, 'Invalid database type: ' + type);

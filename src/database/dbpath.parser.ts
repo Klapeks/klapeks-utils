@@ -15,7 +15,7 @@ function pickEnv(env: string, prefix?: string, env2?: string): string | undefine
     if (!resp && env2) resp = pickEnv(env2, prefix);
     return resp;
 }
-function rPickEnv(env: string, prefix?: string, env2?: string) {
+function requiredPickEnv(env: string, prefix?: string, env2?: string) {
     env = env.toUpperCase();
     let r = pickEnv(env, prefix, env2);
     if (r) return r;
@@ -35,31 +35,33 @@ export function getDatabaseType(): DatabaseOptions['type'] {
 export function dataSourceOptions(): DatabaseOptions {
     const type = getDatabaseType();
     const logging = pickEnv('log_sql') == 'true'
-                 || pickEnv('sql_log') == 'true';
+                 || pickEnv('sql_log') == 'true'
+                 || pickEnv('sql_debug') == 'true'
+                 || pickEnv('debug_sql') == 'true';
                  
     if (type == 'sqlite') {
         return {
             type: 'sqlite', 
             logging: logging,
-            database: rPickEnv('path', 'sqlite'),
+            database: requiredPickEnv('path', 'sqlite'),
             charset: pickEnv('charset', 'sqlite'),
         }
     }
     if (type == 'mysql' || type == 'postgres' || type == 'mssql') {
         const extraOptions = type === 'mssql' ? {
-            useUTC: rPickEnv('options_use_utc') == 'true',
-            trustServerCertificate: rPickEnv(
-                'options_trust_server_certificate') == 'false' 
-                ? false : true,
-            encrypt: rPickEnv('options_encrypt') == 'false' ? false : true,
+            useUTC: pickEnv('options_use_utc', 'mssql') == 'true',
+            trustServerCertificate: pickEnv(
+                'options_trust_server_certificate', 
+                'mssql') == 'false' ? false : true,
+            encrypt: pickEnv('options_encrypt', 'mssql') == 'false' ? false : true,
         } : undefined;
         return {
             type, 
             logging,
-            host: rPickEnv("host", type, 'ip'),
-            port: Number(rPickEnv('port', type)),
-            database: rPickEnv('name', type),
-            username: rPickEnv('login', type, 'user'),
+            host: requiredPickEnv("host", type, 'ip'),
+            port: Number(requiredPickEnv('port', type)),
+            database: requiredPickEnv('name', type),
+            username: requiredPickEnv('login', type, 'user'),
             password: pickEnv('password', type),
             charset: pickEnv('charset', type),
             options: extraOptions,

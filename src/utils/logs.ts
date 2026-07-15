@@ -1,3 +1,4 @@
+import { miniDateUtils } from "./date.utils";
 import { terminalColors as colors } from "./terminal.colors";
 
 export class Logger {
@@ -14,7 +15,9 @@ export class Logger {
     }
 
     datePrefix(prefix='') {
-        const date = new Date().toLocaleTimeString('uk-UA');
+        const date = process.env.LOGS_UTILS_ADD_DATE == 'true'
+            ? miniDateUtils.convertDateAndTime(new Date()) 
+            : new Date().toLocaleTimeString('uk-UA');
         return '[' + (prefix ? (prefix + ' ') : '')
             + date + (this.name ? " " + this.name : '') + ']';
     }

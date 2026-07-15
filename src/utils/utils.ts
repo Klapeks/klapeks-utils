@@ -69,5 +69,5 @@ export const utils = {
             }
         }
         return object;
-    }
+    },
 } as const;

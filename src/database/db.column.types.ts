@@ -1,6 +1,10 @@
 import { DatabaseOptions } from "./db.types";
-import { getDatabaseType } from "./dbpath.parser"
+import { getEnvDatabaseType } from "./dbpath.parser"
 
+// export type IDatabaseColumnType = "integer" | "int" | "bigint"
+//     | "float" | "double" | "text" | "varchar" | "nvarchar" | "character varying"
+//     | "bit" | "tinyint" | "boolean" | "enum" | "simple-enum" 
+//     | "datetime" | "timestamp" | "datetime2" | "json" | "simple-json";
 
 interface IDatabaseColumnTypesList {
     dbtype: DatabaseOptions['type'],
@@ -8,16 +12,20 @@ interface IDatabaseColumnTypesList {
     bigint: "bigint" | "integer",
     float32: "float" | "double",
     float64: "float" | "double",
-    string: "varchar" | "nvarchar" | "character varying" | "text",
+    string: "varchar" | "nvarchar" | "character varying",
     boolean: "bit" | "tinyint" | "boolean" | "integer",
-    enum: "enum" | "simple-enum",
     datetime: "datetime" | "timestamp" | "datetime2",
-    json: "json" | "simple-json",
+    enum_typeorm: "enum" | "simple-enum",
+    enum_raw_sql: "enum" | "varchar" | "nvarchar",
+    json_typeorm: "json" | "simple-json",
+    json_raw_sql: "json" | "text" | "ntext",
 }
 export type IDatabaseKnownColumnTypes = IDatabaseColumnTypesList[keyof Omit<IDatabaseColumnTypesList, "dbtype">];
 
 // https://github.com/typeorm/typeorm/blob/master/src/driver/mysql/MysqlDriver.ts#L750
 // https://github.com/typeorm/typeorm/blob/master/src/driver/sqlserver/SqlServerDriver.ts#L678
+// https://github.com/typeorm/typeorm/blob/master/src/driver/sqlite-abstract/AbstractSqliteDriver.ts#L658
+// https://github.com/typeorm/typeorm/blob/master/src/driver/postgres/PostgresDriver.ts#L1149
 const databaseColumnTypes = {
     "sqlite": {
         dbtype: "sqlite",
@@ -25,11 +33,13 @@ const databaseColumnTypes = {
         bigint: "integer",
         float32: "float",
         float64: "double",
-        string: "text",
-        boolean: "integer",
-        enum: "simple-enum",
+        string: "varchar",
+        boolean: "boolean",
         datetime: "datetime",
-        json: "simple-json",
+        enum_typeorm: "simple-enum",
+        enum_raw_sql: "varchar",
+        json_typeorm: "simple-json",
+        json_raw_sql: "text",
     },
     "mysql": {
         dbtype: "mysql",
@@ -39,9 +49,11 @@ const databaseColumnTypes = {
         float64: "double",
         string: "varchar",
         boolean: "tinyint",
-        enum: "enum",
         datetime: "datetime",
-        json: "json",
+        enum_typeorm: "enum",
+        enum_raw_sql: "enum",
+        json_typeorm: "json",
+        json_raw_sql: "json",
     },
     "mssql": {
         dbtype: "sqlite",
@@ -51,9 +63,11 @@ const databaseColumnTypes = {
         float64: "float",
         string: "nvarchar",
         boolean: "bit",
-        enum: "simple-enum",
         datetime: "datetime2",
-        json: "simple-json",
+        enum_typeorm: "simple-enum",
+        enum_raw_sql: "nvarchar",
+        json_typeorm: "simple-json",
+        json_raw_sql: "ntext",
     },
     "postgres": {
         dbtype: "postgres",
@@ -63,38 +77,31 @@ const databaseColumnTypes = {
         float64: "double",
         string: "character varying",
         boolean: "boolean",
-        enum: "enum",
         datetime: "timestamp",
-        json: "json",
+        enum_typeorm: "enum",
+        enum_raw_sql: "enum",
+        json_typeorm: "json",
+        json_raw_sql: "json",
     },
 } satisfies { 
     [key in DatabaseOptions['type']]: IDatabaseColumnTypesList
 }
 
-export function getDatabaseColumnTypes(): {
-    dbtype: DatabaseOptions['type'],
-    int32: "integer" | "int",
-    string: "varchar" | "nvarchar" | "character varying" | "text",
-    boolean: "bit" | "tinyint" | "boolean" | "integer",
-    enum: "enum" | "simple-enum",
-    bigint: "bigint" | "integer",
-    datetime: "datetime" | "timestamp" | "datetime2",
-    float32: "float" | "double",
-    float64: "float" | "double",
-    json: "json" | "simple-json",
-} {
-    const type = getDatabaseType();
-    if (databaseColumnTypes[type]) {
-        return databaseColumnTypes[type];
+export function getEnvDatabaseColumnTypes(): IDatabaseColumnTypesList {
+    const dbType = getEnvDatabaseType();
+    if (databaseColumnTypes[dbType]) {
+        return databaseColumnTypes[dbType];
     }
-    throw 'Unknown database type: ' + type;
+    throw 'Unknown database type: ' + dbType;
 }
 
 export function getRawDatabaseColumnTypeOfTypeORM(dbtype: DatabaseOptions['type'], typeormType: any) {
     if (typeormType === Number) return databaseColumnTypes[dbtype].int32;
     if (typeormType === String) return databaseColumnTypes[dbtype].string;
     if (typeormType === Boolean) return databaseColumnTypes[dbtype].boolean;
-    if (typeormType === 'bigint') return databaseColumnTypes[dbtype].bigint;
     if (typeormType === Date) return databaseColumnTypes[dbtype].datetime;
+    if (typeormType === 'bigint') return databaseColumnTypes[dbtype].bigint;
+    if (typeormType === 'simple-enum') return databaseColumnTypes[dbtype].enum_raw_sql;
+    if (typeormType === 'simple-json') return databaseColumnTypes[dbtype].json_raw_sql;
     return typeormType as IDatabaseKnownColumnTypes;
 }

@@ -1,4 +1,5 @@
 import { logger } from './logs';
+import { objectUtils } from './object.utils';
 
 
 function sleep(ms: number) {
@@ -15,8 +16,10 @@ export function assertNever(never: never, error?: any): never {
 
 export const utils = {
     delay: sleep, sleep, assertNever,
+    objects: objectUtils,
     
     replaceAll(str: string, from: string, to: string): string {
+        if (from === to) return str;
         while(str.includes(from)) {
             str = str.replace(from, to);
         }
@@ -46,28 +49,5 @@ export const utils = {
             str += charset[(Math.random() * charset.length)|0];
         }
         return str;
-    },
-
-    copyFiltered<T>(object: Partial<T>, keys: (keyof T)[]): Partial<T> {
-        const obj: Partial<T> = {};
-        for (let key of keys) {
-            if (object[key] === undefined) continue;
-            if (typeof object[key] == 'undefined') continue;
-            obj[key] = object[key];
-        }
-        return obj;
-    },
-    removeUndefineds(object: any, deep = true): any {
-        if (typeof object != 'object') return object;
-        for (let key of Object.keys(object)) {
-            if (object[key] === undefined) delete object[key];
-            else if (typeof object[key] === 'undefined') {
-                delete object[key];
-            }
-            else if (deep && typeof object[key] == 'object') {
-                object[key] = utils.removeUndefineds(object[key]);
-            }
-        }
-        return object;
     },
 } as const;

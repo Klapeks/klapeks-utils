@@ -7,6 +7,7 @@ export * from './bits';
 export * from './logs';
 export * from './terminal.colors';
 export * from './uncaught.exception';
+export * from './object.utils';
 export * from './utils';
 
 export const globalLogger = logger;

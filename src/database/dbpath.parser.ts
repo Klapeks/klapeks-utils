@@ -25,21 +25,21 @@ function requiredPickEnv(env: string, prefix?: string, env2?: string) {
     throw new Error(r);
 }
 
-let _database_type: DatabaseOptions['type'] | undefined;
-export function getDatabaseType(): DatabaseOptions['type'] {
-    if (_database_type) return _database_type;
-    _database_type = requiredPickEnv('type') as DatabaseOptions['type'];
-    return _database_type;
+let _env_database_type: DatabaseOptions['type'] | undefined;
+export function getEnvDatabaseType(): DatabaseOptions['type'] {
+    if (_env_database_type) return _env_database_type;
+    _env_database_type = requiredPickEnv('type') as DatabaseOptions['type'];
+    return _env_database_type;
 }
 
 export function dataSourceOptions(): DatabaseOptions {
-    const type = getDatabaseType();
+    const dbType = getEnvDatabaseType();
     const logging = pickEnv('log_sql') == 'true'
         || pickEnv('sql_log') == 'true'
         || pickEnv('sql_debug') == 'true'
         || pickEnv('debug_sql') == 'true';
 
-    if (type == 'sqlite') {
+    if (dbType == 'sqlite') {
         return {
             type: 'sqlite',
             logging: logging,
@@ -47,8 +47,8 @@ export function dataSourceOptions(): DatabaseOptions {
             charset: pickEnv('charset', 'sqlite'),
         }
     }
-    if (type == 'mysql' || type == 'postgres' || type == 'mssql') {
-        const extraOptions = type === 'mssql' ? {
+    if (dbType == 'mysql' || dbType == 'postgres' || dbType == 'mssql') {
+        const extraOptions = dbType === 'mssql' ? {
             useUTC: pickEnv('options_use_utc', 'mssql') == 'true',
             trustServerCertificate: pickEnv(
                 'options_trust_server_certificate',
@@ -56,17 +56,17 @@ export function dataSourceOptions(): DatabaseOptions {
             encrypt: pickEnv('options_encrypt', 'mssql') == 'false' ? false : true,
         } : undefined;
         return {
-            type: type,
+            type: dbType,
             logging: logging,
-            host: requiredPickEnv("host", type, 'ip'),
-            port: Number(requiredPickEnv('port', type)),
-            database: requiredPickEnv('name', type),
-            username: requiredPickEnv('login', type, 'user'),
-            password: pickEnv('password', type),
-            charset: pickEnv('charset', type),
+            host: requiredPickEnv("host", dbType, 'ip'),
+            port: Number(requiredPickEnv('port', dbType)),
+            database: requiredPickEnv('name', dbType),
+            username: requiredPickEnv('login', dbType, 'user'),
+            password: pickEnv('password', dbType),
+            charset: pickEnv('charset', dbType),
             options: extraOptions,
             extra: extraOptions,
         }
     }
-    assertNever(type, 'Invalid database type: ' + type);
+    assertNever(dbType, 'Invalid database type: ' + dbType);
 }

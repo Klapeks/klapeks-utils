@@ -6,7 +6,7 @@ import { getEnvDatabaseType } from "./dbpath.parser"
 //     | "bit" | "tinyint" | "boolean" | "enum" | "simple-enum" 
 //     | "datetime" | "timestamp" | "datetime2" | "json" | "simple-json";
 
-interface IDatabaseColumnTypesList {
+export interface IDatabaseColumnTypesList {
     dbtype: DatabaseOptions['type'],
     int32: "integer" | "int",
     bigint: "bigint" | "integer",

@@ -6,10 +6,14 @@ export class Queue {
     private queue: (() => any)[] = [];
     constructor() {}
 
-    private isStarted = false;
+    private _isWorking = false;
+    get isWorking() {
+        return this._isWorking;
+    }
+
     private async start() {
-        if (this.isStarted) return;
-        this.isStarted = true;
+        if (this._isWorking) return;
+        this._isWorking = true;
         while (this.queue.length) {
             let func = this.queue.shift() as any;;
             if (!func) continue;
@@ -20,10 +24,10 @@ export class Queue {
                     await func;
                 }
             } catch (err) {
-                logger.error("Queue uncaughed err:", err);
+                logger.error("Queue uncaught err:", err);
             }
         }
-        this.isStarted = false;
+        this._isWorking = false;
     }
     push(func: () => any) {
         this.queue.push(func);
@@ -36,7 +40,7 @@ export class Queue {
                 try {
                     func = func() as any;
                     if (func && 'then' in func) {
-                        await (func as any);
+                        func = await (func as any);
                     }
                     resolve(func as any);
                 } catch(error) {

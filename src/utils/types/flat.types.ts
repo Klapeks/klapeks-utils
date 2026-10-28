@@ -27,7 +27,7 @@ export namespace FlatTypes {
 
 export type Flatten<T, Splitter extends string = '.'> = FlatTypes.Flatten<T, Splitter>;
 
-export function obejctToFlat<
+export function objectToFlat<
     T extends object, 
     Splitter extends string, 
     P = Flatten<T, Splitter>
@@ -42,7 +42,7 @@ export function obejctToFlat<
             continue;
         }
         if (typeof (object as any)[key] == 'object') {
-            (object as any)[key] = obejctToFlat((object as any)[key], splitter);
+            (object as any)[key] = objectToFlat((object as any)[key], splitter);
             for (let subkey of Object.keys((object as any)[key])) {
                 newObject[key + splitter + subkey] = (object as any)[key][subkey];
             }

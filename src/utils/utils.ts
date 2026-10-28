@@ -9,7 +9,7 @@ function sleep(ms: number) {
 }
 export function assertNever(never: never, error?: any): never {
     logger.error("Never assert failed:", never);
-    if (!error) error = new Error("Never assered: " + JSON.stringify(never));
+    if (!error) error = new Error("Never asserted: " + JSON.stringify(never));
     if (typeof error != 'object') error = new Error(error);
     throw error;
 }

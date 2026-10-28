@@ -2,7 +2,7 @@ import { logger } from "../utils";
 
 export interface IAsyncInterval {
     timer: number;
-    inverval: number;
+    interval: number;
     callback: () => Promise<any>;
 }
 
@@ -20,10 +20,10 @@ setInterval(() => {
         interval.timer = -1;
         try {
             interval.callback().finally(() => {
-                interval.timer = interval.inverval;
+                interval.timer = interval.interval;
             });
         } catch (err) {
-            logger.error('errow while intervaling', err);
+            logger.error('Error while intervaling', err);
         }
     }
 }, INTERVAL_MS);
@@ -41,7 +41,7 @@ export function clearAsyncInterval(interval: IAsyncInterval | (() => Promise<any
     asyncIntervals = asyncIntervals.filter(i => i != interval);
 }
 export function setAsyncInterval(callback: () => Promise<any>, ms: number) {
-    const interval: IAsyncInterval = { callback, inverval: ms, timer: ms };
+    const interval: IAsyncInterval = { callback, interval: ms, timer: ms };
     asyncIntervals.push(interval);
     return interval;
 }

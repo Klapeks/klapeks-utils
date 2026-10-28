@@ -27,11 +27,12 @@ export const objectUtils = {
 
     /** Recursively merges values from 'objectCopyFrom' to 'objectCopyTo' */
     mergeObjects(objectCopyTo: any, objectCopyFrom: any) {
-        let canMerge = false;
+        if (!objectCopyTo) return;
+        let canRecursiveMerge = false;
         for (let key of Object.keys(objectCopyFrom)) {
-            canMerge = objectCopyFrom[key] && typeof objectCopyFrom[key] === 'object';
-            if (canMerge && Array.isArray(objectCopyFrom[key])) canMerge = false;
-            if (canMerge) {
+            canRecursiveMerge = objectCopyFrom[key] && typeof objectCopyFrom[key] === 'object';
+            if (canRecursiveMerge && Array.isArray(objectCopyFrom[key])) canRecursiveMerge = false;
+            if (canRecursiveMerge) {
                 if (!objectCopyTo[key]) objectCopyTo[key] = objectCopyFrom[key];
                 else objectUtils.mergeObjects(objectCopyTo[key], objectCopyFrom[key]);
                 continue;
